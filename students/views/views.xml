@@ -1,0 +1,126 @@
+<odoo>
+  <data>
+<!-- ############################################################################################################### -->
+    <record id="Students_form" model="ir.ui.view">
+        <field name="name">Students Form</field>
+        <field name="model">students.students</field>
+        <field name="arch" type="xml">
+            <form string="Students" create ="1" edit="1"  delete="1" > <!-- (access security) - create  - edit  - delete  -->
+                <header>
+<!--                    <button name="name_of_def_to_change" string="" class="oe_highlight" states="name selection = ,'2' " type="object"/>-->
+                    <button name="change_state"       string="Set First Interview"  class="oe_highlight" states="a"   type="object"/>
+                    <button name="change_state"       string="Set Second Interview" class="oe_highlight" states="f"   type="object"/>
+                    <button name="set_state_passed"   string="Set Passed"           class="oe_highlight" states="s"   type="object"/>
+                    <button name="set_state_rejected" string="Set Rejected"         class="oe_highlight" states="s"   type="object"/>
+                    <button name="change_state"       string="Back to Applied"      class="oe_highlight" states="p,r" type="object"/>
+                </header>
+
+                <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <field name="img" widget="image" class="oe_avatar m-0"/>
+                        </div>
+
+                        <div class="oe_title" >
+                                    <label for ="name"/>
+                                        <h1>  <field name="name"/> </h1>
+                                    <label for ="code"/>
+                                        <h3>  <field name="code"/> </h3>
+
+                        </div>
+                        <group string="Data">
+                                        <field name="gender"/>
+                                        <field name="age"/>
+                                        <field name="salary"/>
+                                        <field name="accepted"/>
+                                        <field name="birth_date"      attrs="{'invisible': [('gender', '=', 'f')]}"/>
+<!--                          { < 	,  &lt;}      {>	, &gt; }    {<= , &lt;=}    	 {>= , &gt;=}        -->
+<!--                            'invisible' == hidden      /      'readonly' != must_write      /     'required' == must_write -->
+<!--                             attrs="{'invisible': ['|',('gender', '=', 'f'),('gender', '=', 'm')]}"/>  --> <!-- '|'  == or -->
+                                        <field name="skills_ids"      widget="many2many_tags" />
+                        </group>
+
+                    <notebook>
+                        <page string="Tracks">
+                                <group>
+                                        <field name="track_id"/><!-- domain -*for*-> many2one-->
+                                        <field name="login_time"/>
+                                        <field name="capacity_track"/>
+                                </group>
+                        </page>
+
+                        <page string="Description">
+                                <group>
+                                        <field name="des"/>
+                                </group>
+                        </page>
+                        <page string="location">
+                                <group>
+                                        <field name="add"/>
+                                </group>
+                        </page>
+
+
+                        <page string="Grade">
+                                        <field name="grade_id">
+                                            <tree>
+                                                   <field name="course_id"/>
+                                                   <field name="grade"/>
+                                            </tree>
+                                        </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+<!-- ############################################################################################################### -->
+    <record id="Students_tree" model="ir.ui.view">
+        <field name="name">Students Tree</field>
+        <field name="model">students.students</field>
+        <field name="arch" type="xml">
+            <tree string="Students">
+                        <field name="code"  />
+                        <field name="name"  />
+                        <field name="track_id"/>
+                        <field name="accepted" optional="1"/>
+                        <field name="add" optional="1"/>
+
+            </tree>
+        </field>
+    </record>
+<!-- ############################################################################################################### -->
+      <record id="Students_search" model="ir.ui.view">
+         <field name="name">Students Tree</field>
+         <field name="model">students.students</field>
+          <field name="arch" type="xml">
+              <search string="">
+            <field name="code" string="name" />
+            <field name="name" string="name" />
+            <filter name="is_accepted" string="with Work inside company" domain="[('accepted','=',True)]"/>
+            <filter name="is_not_accepted" string="without Work inside company" domain="[('accepted','!=',True)]"/>
+
+            <filter name="group_accepted" string="Work inside company" context="{'group_by' : 'accepted' }"/>
+          </search>
+         </field>
+      </record>
+<!-- ############################################################################################################### -->
+    <record id="students.action_window" model="ir.actions.act_window">
+      <field name="name">Student</field>
+      <field name="res_model">students.students</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+<!-- ############################################################################################################### -->
+    <menuitem id="School_cat" name="School Tech" web_icon="students,static/description/icon.png" sequence="1"/>
+    <menuitem id="Students_root" name="Students" parent="School_cat" sequence="2"/>
+    <menuitem id="Student_root" name="Student" parent="Students_root" action="students.action_window" sequence="1"/>
+<!-- ############################################################################################################### -->
+
+
+
+  </data>
+</odoo>
